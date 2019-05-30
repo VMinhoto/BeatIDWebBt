@@ -1,3 +1,65 @@
+//CHART AREA
+let secondsToShow=10;
+let fs=250;
+let xlabel=[];
+(arr = []).length = secondsToShow*fs-1; arr.fill(0);
+console.log(arr)
+
+j=0
+for (i = 0; i < secondsToShow*fs-1; i++){
+  if (i%249==0){
+    xlabel.push(j.toString())
+    j+=1
+  }
+  else{
+    xlabel.push("")
+  }
+}
+console.log(xlabel)
+
+
+var ctx = document.getElementById('myChart').getContext('2d');
+var myLineChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: xlabel,
+    datasets: [{ 
+        data: arr,
+        borderColor: "#3e95cd",
+        fill: false,
+      }
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'ECG'
+    },
+    elements: {
+      point:{
+          radius: 0
+      }
+    },
+    scales: {
+      xAxes: [{
+          gridLines: {
+              display:false
+          }
+      }],
+      yAxes: [{
+          gridLines: {
+              display:false
+          }   
+      }]
+    }
+  }
+});
+
+
+
+
+//CONNECTION PART DOWN fROM HERE
+
 // Get references to UI elements
 let connectButton = document.getElementById('connect');
 let disconnectButton = document.getElementById('disconnect');
@@ -122,8 +184,16 @@ function handleCharacteristicValueChanged(event) {
     }
   }
   log(a, 'in');
-  console.log("cenas")
-  console.log(a)
+  arr = arr.slice(33, arr.length);
+  arr.push(...a)
+  myLineChart.data.datasets[0].data=myLineChart.data.datasets[0].data.slice(33, arr.length);
+  myLineChart.data.datasets[0].data.push(...a)
+  myLineChart.update()
+  console.log(myLineChart.data.datasets)
+  //console.log(myLineChart.datasets[0].data)
+  
+  //console.log("cenas")
+  //console.log(a)
   //log(event.target.value)
 }
 
